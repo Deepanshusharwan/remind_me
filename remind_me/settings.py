@@ -27,7 +27,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config('DEBUG', cast=bool, default=False)
 
 # Broker for celery  
-CELERY_BROKER_URL = config('REDIS_URL')
+CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
