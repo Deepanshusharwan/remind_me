@@ -7,3 +7,13 @@ class TelegramUser(models.Model):
 
     def __str__(self):
         return self.username or str(self.chat_id)
+
+
+class Reminder(models.Model):
+    user = models.ForeignKey("TelegramUser", on_delete=models.CASCADE)
+    message = models.TextField()
+    remind_at = models.DateTimeField()
+    sent = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Reminder [{self.message[:20]} @ {self.remind_at}]"
