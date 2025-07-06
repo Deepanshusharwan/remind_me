@@ -13,20 +13,30 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telegram_bot.models import TelegramUser
 from decouple import config
 from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User
 
 # sync_to_async utility of django to safely run the sync django code in async context
 @sync_to_async
-def save_telegram_user(chat_id, username):
+def save_telegram_user(chat_id, username, user):
     TelegramUser.objects.get_or_create(
         chat_id=chat_id,
-        defaults={'username': username}
+        defaults={'username': username, 'user': user}
     )
+
+@sync_to_async
+def save_django_user(username):
+    user, _ = User.objects.get_or_create(username=username)
+    return user
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     username = update.effective_user.username
+    print(username)
     chat_id = update.effective_user.id
+    
+    user = await save_django_user(username)
+    print(user)
 
-    await save_telegram_user(chat_id, username)
+    await save_telegram_user(chat_id, username, user)
     await update.message.reply_text("👋 Welcome! You'll receive reminders here.")
 
 def main():

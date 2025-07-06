@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from telegram_bot.views import CreateReminderView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('api.urls')),
+    path('api/reminders/create', CreateReminderView.as_view()),
 ]
